@@ -1,0 +1,16 @@
+# Use this file to define individuals or teams that are responsible for code in a repository.
+# Read more: <https://help.github.com/articles/about-codeowners/>
+#
+# Order is important: the last matching pattern has the highest precedence
+
+# Protect .github directory (except banner.png) to admins and security
+.github/workflows/ @cloudposse-terraform-components/admins @cloudposse-terraform-components/security
+.github/CODEOWNERS @cloudposse-terraform-components/admins @cloudposse-terraform-components/security
+.github/*.yaml @cloudposse-terraform-components/admins @cloudposse-terraform-components/security
+.github/*.yml @cloudposse-terraform-components/admins @cloudposse-terraform-components/security
+.github/*.json @cloudposse-terraform-components/admins @cloudposse-terraform-components/security
+
+# Protect .pre-commit-config.yaml and Makefile to security
+.pre-commit-config.yaml @cloudposse-terraform-components/security
+Makefile @cloudposse-terraform-components/security
+

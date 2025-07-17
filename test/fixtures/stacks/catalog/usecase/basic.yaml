@@ -1,0 +1,7 @@
+components:
+  terraform:
+    example/basic:
+      metadata:
+        component: target
+      vars:
+        enabled: true
