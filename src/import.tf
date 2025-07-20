@@ -40,19 +40,19 @@ data "github_actions_environment_variables" "default" {
 }
 
 locals {
-  environments_variables = local.import ? flatten([
-    for environment in local.environments_exists : [
+  environments_variables = local.import ? merge([
+    for environment in local.environments_exists : {
       for variable in data.github_actions_environment_variables.default[environment].variables[*].name :
-      { environment = environment, variable = lower(variable), key = format("%s-%s", environment, lower(variable)) }
+      format("%s-%s", environment, lower(variable)) => { environment = environment, variable = lower(variable) }
       if contains([for i in keys(local.environments[environment].variables) : lower(i)], lower(variable))
-    ]
-  ]) : []
+    }
+  ]...) : {}
 }
 
 import {
-  for_each = toset(nonsensitive(local.environments_variables))
+  for_each = nonsensitive(local.environments_variables)
   id       = format("%s:%s:%s", var.repository.name, each.value.environment, each.value.variable)
-  to       = module.repository.github_actions_environment_variable.default[each.value.key]
+  to       = module.repository.github_actions_environment_variable.default[each.key]
 }
 
 data "github_repository_autolink_references" "default" {
@@ -62,18 +62,17 @@ data "github_repository_autolink_references" "default" {
 
 locals {
   autolink_references = local.import ? { for k, v in var.autolink_references : v.key_prefix => k } : {}
-  autolink_references_exists = local.import ? [
-    for i in data.github_repository_autolink_references.default[var.repository.name].autolink_references[*] : {
-      id   = format("%s/%s", var.repository.name, i.key_prefix)
-      name = local.autolink_references[i.key_prefix]
-    } if can(local.autolink_references[i.key_prefix])
-  ] : []
+  autolink_references_exists = local.import ? {
+    for i in data.github_repository_autolink_references.default[var.repository.name].autolink_references[*] : 
+    local.autolink_references[i.key_prefix] => format("%s/%s", var.repository.name, i.key_prefix)
+    if can(local.autolink_references[i.key_prefix])
+   } : {}
 }
 
 import {
-  for_each = toset(local.autolink_references_exists)
-  id       = each.value.id
-  to       = module.repository.github_repository_autolink_reference.default[each.value.name]
+  for_each = local.autolink_references_exists
+  id       = each.value
+  to       = module.repository.github_repository_autolink_reference.default[each.key]
 }
 
 data "github_actions_variables" "default" {
@@ -120,18 +119,17 @@ data "github_repository_deploy_keys" "default" {
 
 locals {
   deploy_keys = local.import ? { for k, v in var.deploy_keys : v.key => k } : {}
-  deploy_keys_exists = local.import ? [
-    for item in data.github_repository_deploy_keys.default[var.repository.name].keys : {
-      id   = format("%s:%s", var.repository.name, item.id)
-      name = local.deploy_keys[item.key]
-    } if can(local.deploy_keys[item.key])
-  ] : []
+  deploy_keys_exists = local.import ? {
+    for item in data.github_repository_deploy_keys.default[var.repository.name].keys :
+    local.deploy_keys[item.key] => format("%s:%s", var.repository.name, item.id)
+    if can(local.deploy_keys[item.key])
+  } : {}
 }
 
 import {
-  for_each = toset(local.deploy_keys_exists)
-  id       = each.value.id
-  to       = module.repository.github_repository_deploy_key.default[each.value.name]
+  for_each = local.deploy_keys_exists
+  id       = each.value
+  to       = module.repository.github_repository_deploy_key.default[each.key]
 }
 
 
@@ -141,16 +139,15 @@ data "github_issue_labels" "default" {
 }
 
 locals {
-  labels_exists = local.import ? [
-    for item in data.github_issue_labels.default[var.repository.name].labels : {
-      id   = format("%s:%s", var.repository.name, item.name)
-      name = item.name
-    } if can(var.labels[item.name])
-  ] : []
+  labels_exists = local.import ? {
+    for item in data.github_issue_labels.default[var.repository.name].labels :
+        item.name => format("%s:%s", var.repository.name, item.name)
+        if can(var.labels[item.name])
+  } : {}
 }
 
 import {
-  for_each = toset(local.labels_exists)
-  id       = each.value.id
-  to       = module.repository.github_issue_label.default[each.value.name]
+  for_each = local.labels_exists
+  id       = each.value
+  to       = module.repository.github_issue_label.default[each.key]
 }
