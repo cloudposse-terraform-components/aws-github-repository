@@ -1,0 +1,70 @@
+components:
+  terraform:
+    example/import:
+      metadata:
+        component: target
+      vars:
+        enabled: true
+        owner: cloudposse-tests
+        import: true
+        repository:
+          name: "terraform-github-repository-test"
+          description: "Terraform acceptance tests for component"
+          homepage_url: "http://example.com/"
+          topics:
+            - terraform
+            - github
+            - test
+          default_branch: "main"
+
+          is_template: true
+
+        autolink_references:
+          jira:
+            key_prefix: "JIRA-"
+            target_url_template: "https://jira.example.com/browse/<num>"
+        
+        variables:
+          test_variable_2: "test-value-2"
+
+        # Secrets do not support import
+        # secrets:
+        #   test_secret: "test-value"
+
+        environments:
+          staging:
+            wait_timer: 1
+            can_admins_bypass: true
+            prevent_self_review: false
+            deployment_branch_policy:
+              protected_branches: true
+              custom_branches: null
+            variables:
+              test_variable: "test"
+            # Secrets do not support import
+            # secrets:
+            #   test_secret: "test-value"
+
+        deploy_keys:
+          cicd-key:
+            title: "Default"
+            key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSHUzkpe/3+gw47qcz1q9drMTgqY+j6eAosO4Dw8WsqrOWf7XjsLjken4VbgY387vgka9VX94haQMiH2pB7acrGVRgpzC1JWvCcGQcgfrzwAYKLm98N8eJhwOSid6puR47Oc4HcXWjddONSMDQ6TYaAXrNjazbR217ZfqiGcHtmEnvekUmbW337JPT1/Ip3+Gm62YZviNGhrr7b3Elw33ZjqVNzsPom6YOpE8V0S2wQOQuh1EDIxy7wm2roQNLOQuGWhvjuj25dLh08SScmcXfedcCAIBpAS1C0BGWSbqD7R7tAoPDgjzLVXOT8HgE8/cFFzcvfy5GQAWqwjr5k+d/"
+            read_only: true
+
+        # Webhooks import is not supported due to has poor import interface
+        # webhooks:
+        #   notify-on-push:
+        #     active: true
+        #     url: "https://hooks.example.com/github"
+        #     events:
+        #       - push
+        #       - pull_request
+        #     content_type: "json"
+        #     insecure_ssl: false
+        #     secret: "test-secret"
+
+        labels:
+          bug:
+            color: "#d73a4a"
+            description: "Something isn't working"
+
