@@ -58,7 +58,7 @@ module "repository" {
   enable_vulnerability_alerts = var.repository.enable_vulnerability_alerts
   security_and_analysis       = var.repository.security_and_analysis
 
-  autolink_references         = var.autolink_references
+  autolink_references = var.autolink_references
 
   custom_properties = var.custom_properties
   environments      = local.environments
@@ -76,32 +76,32 @@ module "repository" {
 locals {
   secrets = sensitive({
     for k, v in coalesce(var.secrets, {}) : k => (
-      startswith(v, "ssm:") ? data.aws_ssm_parameter.default[v].value : 
+      startswith(v, "ssm:") ? data.aws_ssm_parameter.default[v].value :
       startswith(v, "sm:") ? data.aws_secretsmanager_secret_version.default[v].secret_string : v
     )
   })
 
   variables = {
     for k, v in try(var.variables, {}) : k => (
-      startswith(v, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[v].value) : 
+      startswith(v, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[v].value) :
       startswith(v, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[v].secret_string) : v
     )
   }
 
   environments = {
     for k, v in coalesce(var.environments, {}) : k => {
-      wait_timer = v.wait_timer
-      can_admins_bypass = v.can_admins_bypass
+      wait_timer          = v.wait_timer
+      can_admins_bypass   = v.can_admins_bypass
       prevent_self_review = v.prevent_self_review
       variables = {
         for name, variable in coalesce(v.variables, {}) : name => (
-          startswith(variable, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[variable].value) : 
+          startswith(variable, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[variable].value) :
           startswith(variable, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[variable].secret_string) : variable
         )
       }
       secrets = {
         for name, secret in coalesce(v.secrets, {}) : name => (
-          startswith(secret, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[secret].value) : 
+          startswith(secret, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[secret].value) :
           startswith(secret, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[secret].secret_string) : secret
         )
       }
