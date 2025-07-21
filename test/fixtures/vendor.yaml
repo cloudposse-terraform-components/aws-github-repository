@@ -12,5 +12,8 @@ spec:
       targets:
         - "components/terraform/account-map"
       included_paths:
-        - "**/**"
+        - "**/*.tf"
+        - "**/*.md"
+        - "**/*.tftmpl"
+        - "**/modules/**"
       excluded_paths: []

@@ -253,7 +253,7 @@ func (s *ComponentSuite) TestImport() {
 			"cloudposse-test-bot": "pull",
 		},
 	}
-
+	
 	s.DriftTest(component, stack, &input)
 }
 
