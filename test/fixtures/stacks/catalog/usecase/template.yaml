@@ -21,5 +21,3 @@ components:
             - github
             - test
           default_branch: "main"
-
-          is_template: true
