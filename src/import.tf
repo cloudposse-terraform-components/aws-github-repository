@@ -63,10 +63,10 @@ data "github_repository_autolink_references" "default" {
 locals {
   autolink_references = local.import ? { for k, v in var.autolink_references : v.key_prefix => k } : {}
   autolink_references_exists = local.import ? {
-    for i in data.github_repository_autolink_references.default[var.repository.name].autolink_references[*] : 
+    for i in data.github_repository_autolink_references.default[var.repository.name].autolink_references[*] :
     local.autolink_references[i.key_prefix] => format("%s/%s", var.repository.name, i.key_prefix)
     if can(local.autolink_references[i.key_prefix])
-   } : {}
+  } : {}
 }
 
 import {
@@ -141,8 +141,8 @@ data "github_issue_labels" "default" {
 locals {
   labels_exists = local.import ? {
     for item in data.github_issue_labels.default[var.repository.name].labels :
-        item.name => format("%s:%s", var.repository.name, item.name)
-        if can(var.labels[item.name])
+    item.name => format("%s:%s", var.repository.name, item.name)
+    if can(var.labels[item.name])
   } : {}
 }
 
