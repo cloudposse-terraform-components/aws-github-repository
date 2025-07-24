@@ -1,7 +1,6 @@
 components:
   terraform:
     example/template:
-      command: "tofu"
       metadata:
         component: target
       vars:
