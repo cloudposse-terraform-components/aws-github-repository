@@ -3,10 +3,10 @@ locals {
 }
 
 module "repository" {
-  #source  = "cloudposse/github-repository/aws"
+  #source  = "cloudposse/repository/github"
   #version = "0.1.0"
 
-  source = "github.com/cloudposse/terraform-github-repository?ref=initial-implementation"
+  source = "github.com/cloudposse/terraform-github-repository?ref=v0.1.0"
 
   enabled = local.enabled
 

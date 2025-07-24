@@ -216,9 +216,15 @@ func (s *ComponentSuite) TestTemplate() {
 		},
 	}
 
-	defer s.DestroyAtmosComponent(s.T(), component, stack, &input)
+		
 	options, _ := s.DeployAtmosComponent(s.T(), component, stack, &input)
 	assert.NotNil(s.T(), options)
+
+	// Use atmos.DestroyE instead of s.DestroyAtmosComponent due to weired race condition for tofu > 1.9.0 on destroy.
+	// The issue does not affect tear down resources but exit code is 1.
+	defer func() {
+		atmos.DestroyE(s.T(), options)
+	}()
 
 	s.DriftTest(component, stack, &input)
 
