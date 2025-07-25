@@ -14,7 +14,7 @@ output "ssh_clone_url" {
 }
 
 output "http_clone_url" {
-  description = "SSH clone URL of the created repository"
+  description = "HTTP clone URL of the created repository"
   value       = module.repository.http_clone_url
 }
 
