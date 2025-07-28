@@ -5,3 +5,6 @@ components:
         component: target
       vars:
         enabled: false
+        owner: cloudposse-tests
+        repository:
+          name: "component-test"
