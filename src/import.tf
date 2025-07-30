@@ -4,7 +4,7 @@ locals {
   environments_exists = local.import ? data.github_repository_environments.default[var.repository.name].environments[*].name : []
 }
 
-// Check if the repository exists
+# Check if the repository exists
 data "github_repository" "default" {
   for_each  = toset(local.import ? [var.repository.name] : [])
   full_name = format("%s/%s", var.owner, each.value)
@@ -43,8 +43,8 @@ locals {
   environments_variables = local.import ? merge([
     for environment in local.environments_exists : {
       for variable in data.github_actions_environment_variables.default[environment].variables[*].name :
-      format("%s-%s", environment, lower(variable)) => { environment = environment, variable = lower(variable) }
-      if contains([for i in keys(local.environments[environment].variables) : lower(i)], lower(variable))
+      format("%s-%s", environment, variable) => { environment = environment, variable = variable }
+      if contains([for i in keys(local.environments[environment].variables) : i], variable)
     }
   ]...) : {}
 }
@@ -82,8 +82,8 @@ data "github_actions_variables" "default" {
 
 locals {
   variables_exists = local.import ? [
-    for variable in data.github_actions_variables.default[var.repository.name].variables[*].name : lower(variable)
-    if contains([for i in keys(var.variables) : lower(i)], lower(variable))
+    for variable in data.github_actions_variables.default[var.repository.name].variables[*].name : variable
+    if contains([for i in keys(var.variables) : i], variable)
   ] : []
 }
 

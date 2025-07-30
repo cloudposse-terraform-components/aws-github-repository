@@ -215,7 +215,7 @@ variable "deploy_keys" {
   nullable = false
 }
 
-// https://docs.github.com/en/webhooks/webhook-events-and-payloads
+# https://docs.github.com/en/webhooks/webhook-events-and-payloads
 variable "webhooks" {
   description = "A map of webhooks to configure for the repository"
   type = map(object({
@@ -268,34 +268,34 @@ variable "rulesets" {
   description = "A map of rulesets to configure for the repository"
   type = map(object({
     name = string
-    // disabled, active
+    # disabled, active
     enforcement = string
-    // branch, tag
+    # branch, tag
     target = string
     bypass_actors = optional(list(object({
-      // always, pull_request
+      # always, pull_request
       bypass_mode = string
       actor_id    = optional(string, null)
-      // RepositoryRole, Team, Integration, OrganizationAdmin
+      # RepositoryRole, Team, Integration, OrganizationAdmin
       actor_type = string
     })), [])
     conditions = object({
       ref_name = object({
-        // Supports ~DEFAULT_BRANCH or ~ALL
+        # Supports ~DEFAULT_BRANCH or ~ALL
         include = optional(list(string), [])
         exclude = optional(list(string), [])
       })
     })
     rules = object({
       branch_name_pattern = optional(object({
-        // starts_with, ends_with, contains, regex
+        # starts_with, ends_with, contains, regex
         operator = string
         pattern  = string
         name     = optional(string, null)
         negate   = optional(bool, false)
       }), null),
       commit_author_email_pattern = optional(object({
-        // starts_with, ends_with, contains, regex
+        # starts_with, ends_with, contains, regex
         operator = string
         pattern  = string
         name     = optional(string, null)
@@ -309,14 +309,14 @@ variable "rulesets" {
         required_approving_review_count = number
       }), null),
       commit_message_pattern = optional(object({
-        // starts_with, ends_with, contains, regex
+        # starts_with, ends_with, contains, regex
         operator = string
         pattern  = string
         name     = optional(string, null)
         negate   = optional(bool, false)
       }), null),
       committer_email_pattern = optional(object({
-        // starts_with, ends_with, contains, regex
+        # starts_with, ends_with, contains, regex
         operator = string
         pattern  = string
         name     = optional(string, null)
@@ -324,11 +324,11 @@ variable "rulesets" {
       }), null),
       merge_queue = optional(object({
         check_response_timeout_minutes = optional(number, 60)
-        // ALLGREEN, HEADGREEN
+        # ALLGREEN, HEADGREEN
         grouping_strategy    = string
         max_entries_to_build = optional(number, 5)
         max_entries_to_merge = optional(number, 5)
-        // MERGE, SQUASH, REBASE
+        # MERGE, SQUASH, REBASE
         merge_method                      = optional(string, "MERGE")
         min_entries_to_merge              = optional(number, 1)
         min_entries_to_merge_wait_minutes = optional(number, 5)
@@ -352,14 +352,14 @@ variable "rulesets" {
         do_not_enforce_on_create             = optional(bool, false)
       }), null),
       tag_name_pattern = optional(object({
-        // starts_with, ends_with, contains, regex
+        # starts_with, ends_with, contains, regex
         operator = string
         pattern  = string
         name     = optional(string, null)
         negate   = optional(bool, false)
       }), null),
-      // Unsupported due to drift.
-      // https://github.com/integrations/terraform-provider-github/pull/2701
+      # Unsupported due to drift.
+      # https://github.com/integrations/terraform-provider-github/pull/2701
       # required_code_scanning = optional(object({
       #   required_code_scanning_tool = list(object({
       #     // none, errors, errors_and_warnings, all
@@ -379,7 +379,7 @@ variable "rulesets" {
   }
 
   validation {
-    condition     = alltrue([for k, v in var.rulesets : contains(["disabled", "active"], v.enforcement)])
+    condition     = alltrue([for k, v in var.rulesets : contains(["disabled", "active", "evaluate"], v.enforcement)])
     error_message = "Ruleset enforcement must be disabled or active"
   }
 
