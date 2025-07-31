@@ -43,8 +43,8 @@ locals {
   environments_variables = local.import ? merge([
     for environment in local.environments_exists : {
       for variable in data.github_actions_environment_variables.default[environment].variables[*].name :
-      format("%s-%s", environment, variable) => { environment = environment, variable = variable }
-      if contains([for i in keys(local.environments[environment].variables) : i], variable)
+      format("%s-%s", environment, lower(variable)) => { environment = environment, variable = lower(variable) }
+      if contains([for i in keys(local.environments[environment].variables) : lower(i)], lower(variable))
     }
   ]...) : {}
 }
