@@ -82,8 +82,8 @@ data "github_actions_variables" "default" {
 
 locals {
   variables_exists = local.import ? [
-    for variable in data.github_actions_variables.default[var.repository.name].variables[*].name : variable
-    if contains([for i in keys(var.variables) : i], variable)
+    for variable in data.github_actions_variables.default[var.repository.name].variables[*].name : lower(variable)
+    if contains([for i in keys(var.variables) : lower(i)], lower(variable))
   ] : []
 }
 
