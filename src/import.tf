@@ -4,7 +4,7 @@ locals {
   environments_exists = local.import ? data.github_repository_environments.default[var.repository.name].environments[*].name : []
 }
 
-// Check if the repository exists
+# Check if the repository exists
 data "github_repository" "default" {
   for_each  = toset(local.import ? [var.repository.name] : [])
   full_name = format("%s/%s", var.owner, each.value)
