@@ -74,15 +74,15 @@ module "repository" {
 locals {
   secrets = sensitive({
     for k, v in coalesce(var.secrets, {}) : k => (
-      startswith(v, "ssm:") ? data.aws_ssm_parameter.default[v].value :
-      startswith(v, "sm:") ? data.aws_secretsmanager_secret_version.default[v].secret_string : v
+      startswith(v, "ssm://") ? data.aws_ssm_parameter.default[v].value :
+      startswith(v, "asm://") ? data.aws_secretsmanager_secret_version.default[v].secret_string : v
     )
   })
 
   variables = {
     for k, v in try(var.variables, {}) : k => (
-      startswith(v, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[v].value) :
-      startswith(v, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[v].secret_string) : v
+      startswith(v, "ssm://") ? nonsensitive(data.aws_ssm_parameter.default[v].value) :
+      startswith(v, "asm://") ? nonsensitive(data.aws_secretsmanager_secret_version.default[v].secret_string) : v
     )
   }
 
@@ -93,14 +93,14 @@ locals {
       prevent_self_review = v.prevent_self_review
       variables = {
         for name, variable in coalesce(v.variables, {}) : name => (
-          startswith(variable, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[variable].value) :
-          startswith(variable, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[variable].secret_string) : variable
+          startswith(variable, "ssm://") ? nonsensitive(data.aws_ssm_parameter.default[variable].value) :
+          startswith(variable, "asm://") ? nonsensitive(data.aws_secretsmanager_secret_version.default[variable].secret_string) : variable
         )
       }
       secrets = {
         for name, secret in coalesce(v.secrets, {}) : name => (
-          startswith(secret, "ssm:") ? nonsensitive(data.aws_ssm_parameter.default[secret].value) :
-          startswith(secret, "sm:") ? nonsensitive(data.aws_secretsmanager_secret_version.default[secret].secret_string) : secret
+          startswith(secret, "ssm://") ? nonsensitive(data.aws_ssm_parameter.default[secret].value) :
+          startswith(secret, "asm://") ? nonsensitive(data.aws_secretsmanager_secret_version.default[secret].secret_string) : secret
         )
       }
     }
@@ -109,20 +109,20 @@ locals {
   ssm_parameters = merge(flatten([
     [
       {
-        for k, v in coalesce(var.variables, {}) : v => trimprefix(v, "ssm:") if startswith(v, "ssm:")
+        for k, v in coalesce(var.variables, {}) : v => trimprefix(v, "ssm://") if startswith(v, "ssm://")
       },
       {
-        for k, v in coalesce(var.secrets, {}) : v => trimprefix(v, "ssm:") if startswith(v, "ssm:")
+        for k, v in coalesce(var.secrets, {}) : v => trimprefix(v, "ssm://") if startswith(v, "ssm://")
       },
     ],
     [
       for k, v in coalesce(var.environments, {}) : {
-        for name, variable in coalesce(v.variables, {}) : variable => trimprefix(variable, "ssm:") if startswith(variable, "ssm:")
+        for name, variable in coalesce(v.variables, {}) : variable => trimprefix(variable, "ssm://") if startswith(variable, "ssm://")
       }
     ],
     [
       for k, v in coalesce(var.environments, {}) : {
-        for name, secret in coalesce(v.secrets, {}) : secret => trimprefix(secret, "ssm:") if startswith(secret, "ssm:")
+        for name, secret in coalesce(v.secrets, {}) : secret => trimprefix(secret, "ssm://") if startswith(secret, "ssm://")
       }
     ]
   ])...)
@@ -131,20 +131,20 @@ locals {
   sm_parameters = merge(flatten([
     [
       {
-        for k, v in coalesce(var.variables, {}) : v => trimprefix(v, "sm:") if startswith(v, "sm:")
+        for k, v in coalesce(var.variables, {}) : v => trimprefix(v, "asm://") if startswith(v, "asm://")
       },
       {
-        for k, v in coalesce(var.secrets, {}) : v => trimprefix(v, "sm:") if startswith(v, "sm:")
+        for k, v in coalesce(var.secrets, {}) : v => trimprefix(v, "asm://") if startswith(v, "asm://")
       },
     ],
     [
       for k, v in coalesce(var.environments, {}) : {
-        for name, variable in coalesce(v.variables, {}) : variable => trimprefix(variable, "sm:") if startswith(variable, "sm:")
+        for name, variable in coalesce(v.variables, {}) : variable => trimprefix(variable, "asm://") if startswith(variable, "asm://")
       }
     ],
     [
       for k, v in coalesce(var.environments, {}) : {
-        for name, secret in coalesce(v.secrets, {}) : secret => trimprefix(secret, "sm:") if startswith(secret, "sm:")
+        for name, secret in coalesce(v.secrets, {}) : secret => trimprefix(secret, "asm://") if startswith(secret, "asm://")
       }
     ]
   ])...)

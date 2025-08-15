@@ -87,12 +87,12 @@ func (s *ComponentSuite) TestBasic() {
 			},
 		},
 		"variables": map[string]interface{}{
-			"test_variable": fmt.Sprintf("ssm:%s", ssmSecretPath),
-			"test_variable_2": fmt.Sprintf("sm:%s", createdSecretName),
+			"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
+			"test_variable_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
 		"secrets": map[string]interface{}{
-			"test_secret": fmt.Sprintf("ssm:%s", ssmSecretPath),
-			"test_secret_2": fmt.Sprintf("sm:%s", createdSecretName),
+			"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
+			"test_secret_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
 		"environments": map[string]interface{}{
 			"development": map[string]interface{}{
@@ -124,12 +124,12 @@ func (s *ComponentSuite) TestBasic() {
 				"can_admins_bypass": false,
 				"prevent_self_review": false,
 				"variables": map[string]interface{}{
-					"test_variable": fmt.Sprintf("ssm:%s", ssmSecretPath),
-					"test_variable_2": fmt.Sprintf("sm:%s", smSecretPath),
+					"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
+					"test_variable_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
 				"secrets": map[string]interface{}{
-					"test_secret": fmt.Sprintf("ssm:%s", ssmSecretPath),
-					"test_secret_2": fmt.Sprintf("sm:%s", smSecretPath),
+					"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
+					"test_secret_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
 			},
 		},
