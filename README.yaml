@@ -30,12 +30,12 @@ usage: |-
           secrets:
             MY_SECRET: "my-secret-value"
             MY_SECRET_2: "nacl:dGVzdC12YWx1ZS0yCg=="
-            MY_SECRET_3: "ssm:/my/secret/path"
-            MY_SECRET_4: "sm:secret-name"
+            MY_SECRET_3: "ssm:///my/secret/path"
+            MY_SECRET_4: "asm://secret-name"
           variables:
             MY_VARIABLE: "my-variable-value"
-            MY_VARIABLE_2: "ssm:/my/variable/path"
-            MY_VARIABLE_3: "sm:variable-name"
+            MY_VARIABLE_2: "ssm:///my/variable/path"
+            MY_VARIABLE_3: "asm://variable-name"
   ```
 
   ## Secrets and variables
@@ -43,8 +43,8 @@ usage: |-
   The component supports setting repository and environment secrets and variables. 
   Secrets and variables can be set using the following methods:
   - Raw values (unencrypted string) (example: `my-secret-value`)
-  - AWS Secrets Manager (SM) (example: `sm:secret-name`)
-  - AWS Systems Manager Parameter Store (SSM) (example: `ssm:/my/secret/path`)
+  - AWS Secrets Manager (SM) (example: `asm://secret-name`)
+  - AWS Systems Manager Parameter Store (SSM) (example: `ssm:///my/secret/path`)
 
   In addition to that secrets supports base64 encoded values [encrypted](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28) 
   with [repository key](https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#get-a-repository-public-key).
