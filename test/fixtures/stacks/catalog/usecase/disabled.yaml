@@ -1,0 +1,10 @@
+components:
+  terraform:
+    example/disabled:
+      metadata:
+        component: target
+      vars:
+        enabled: false
+        owner: cloudposse-tests
+        repository:
+          name: "component-test"

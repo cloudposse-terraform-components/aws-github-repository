@@ -1,18 +1,18 @@
 package test
 
 import (
-	"context"
 	"fmt"
-	"os"
-	"strings"
 	"testing"
+	"strings"
+	"context"
+	"os"
 
-	"github.com/cloudposse/test-helpers/pkg/atmos"
 	helper "github.com/cloudposse/test-helpers/pkg/atmos/component-helper"
+	"github.com/cloudposse/test-helpers/pkg/atmos"
+	"github.com/stretchr/testify/assert"
+	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/google/go-github/v73/github"
 	"github.com/gruntwork-io/terratest/modules/aws"
-	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/stretchr/testify/assert"
 )
 
 type ComponentSuite struct {
@@ -21,7 +21,7 @@ type ComponentSuite struct {
 
 func (s *ComponentSuite) TestBasic() {
 	const component = "example/basic"
-	const stack = "test"
+	const stack = "default-test"
 	const awsRegion = "us-east-2"
 
 	randomRepositoryName := strings.ToLower(random.UniqueId())
@@ -34,99 +34,101 @@ func (s *ComponentSuite) TestBasic() {
 	aws.PutParameter(s.T(), awsRegion, ssmSecretPath, "Parameter for github-repository component testing", createdParameterValue)
 	defer aws.DeleteParameter(s.T(), awsRegion, ssmSecretPath)
 
+
 	createdSecretName := strings.ToLower(random.UniqueId())
 	createdSecretValue := strings.ToLower(random.UniqueId())
 	smSecretPath := aws.CreateSecretStringWithDefaultKey(s.T(), awsRegion, "Parameter for github-repository component testing", createdSecretName, createdSecretValue)
 	defer aws.DeleteSecret(s.T(), awsRegion, createdSecretName, true)
 
+
 	input := map[string]interface{}{
 		"repository": map[string]interface{}{
-			"name":           repoName,
-			"description":    "Terraform acceptance tests for component",
-			"homepage_url":   "http://example.com/",
-			"topics":         []interface{}{"terraform", "github", "test"},
+			"name": repoName,
+			"description": "Terraform acceptance tests for component",
+			"homepage_url": "http://example.com/",
+			"topics": []interface{}{"terraform", "github", "test"},
 			"default_branch": "main",
 
 			"is_template": true,
 
-			"auto_init":          true,
+			"auto_init": true,
 			"gitignore_template": "TeX",
-			"license_template":   "GPL-3.0",
+			"license_template": "GPL-3.0",
 
-			"archived":           false,
+			"archived": false,
 			"archive_on_destroy": false,
 
-			"has_issues":      true,
+			"has_issues": true,
 			"has_discussions": true,
-			"has_projects":    true,
-			"has_wiki":        true,
-			"has_downloads":   true,
+			"has_projects": true,
+			"has_wiki": true,
+			"has_downloads": true,
 
 			"allow_merge_commit": true,
 			"allow_squash_merge": true,
 			"allow_rebase_merge": true,
-			"allow_auto_merge":   true,
+			"allow_auto_merge": true,
 
-			"merge_commit_title":          "MERGE_MESSAGE",
-			"merge_commit_message":        "PR_TITLE",
-			"squash_merge_commit_title":   "COMMIT_OR_PR_TITLE",
+			"merge_commit_title": "MERGE_MESSAGE",
+			"merge_commit_message": "PR_TITLE",
+			"squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
 			"squash_merge_commit_message": "COMMIT_MESSAGES",
 
 			"web_commit_signoff_required": true,
-			"delete_branch_on_merge":      true,
+			"delete_branch_on_merge": true,
 
 			"ignore_vulnerability_alerts_during_read": true,
-			"allow_update_branch":                     true,
+			"allow_update_branch": true,
 
 			"security_and_analysis": map[string]interface{}{
-				"advanced_security":               false,
-				"secret_scanning":                 true,
+				"advanced_security": false,
+				"secret_scanning": true,
 				"secret_scanning_push_protection": true,
 			},
 		},
 		"variables": map[string]interface{}{
-			"test_variable":   fmt.Sprintf("ssm://%s", ssmSecretPath),
+			"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
 			"test_variable_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
 		"secrets": map[string]interface{}{
-			"test_secret":   fmt.Sprintf("ssm://%s", ssmSecretPath),
+			"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
 			"test_secret_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
 		"environments": map[string]interface{}{
 			"development": map[string]interface{}{
-				"wait_timer":          5,
-				"can_admins_bypass":   false,
+				"wait_timer": 5,
+				"can_admins_bypass": false,
 				"prevent_self_review": false,
 				"variables": map[string]interface{}{
 					"test_variable": "test-value",
 				},
 			},
 			"production": map[string]interface{}{
-				"wait_timer":          10,
-				"can_admins_bypass":   false,
+				"wait_timer": 10,
+				"can_admins_bypass": false,
 				"prevent_self_review": false,
 				"deployment_branch_policy": map[string]interface{}{
 					"protected_branches": false,
 					"custom_branches": map[string]interface{}{
 						"branches": []interface{}{"main"},
-						"tags":     []interface{}{"v1.0.0"},
+						"tags": []interface{}{"v1.0.0"},
 					},
 				},
 				"secrets": map[string]interface{}{
-					"test_secret":   "test-value",
+					"test_secret": "test-value",
 					"test_secret_2": "nacl:dGVzdC12YWx1ZS0yCg==",
 				},
 			},
 			"staging": map[string]interface{}{
-				"wait_timer":          0,
-				"can_admins_bypass":   false,
+				"wait_timer": 0,
+				"can_admins_bypass": false,
 				"prevent_self_review": false,
 				"variables": map[string]interface{}{
-					"test_variable":   fmt.Sprintf("ssm://%s", ssmSecretPath),
+					"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
 					"test_variable_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
 				"secrets": map[string]interface{}{
-					"test_secret":   fmt.Sprintf("ssm://%s", ssmSecretPath),
+					"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
 					"test_secret_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
 			},
@@ -201,7 +203,7 @@ func (s *ComponentSuite) TestBasic() {
 
 func (s *ComponentSuite) TestTemplate() {
 	const component = "example/template"
-	const stack = "test"
+	const stack = "default-test"
 	const awsRegion = "us-east-2"
 
 	randomRepositoryName := strings.ToLower(random.UniqueId())
@@ -213,6 +215,7 @@ func (s *ComponentSuite) TestTemplate() {
 			"name": repoName,
 		},
 	}
+
 
 	options, _ := s.DeployAtmosComponent(s.T(), component, stack, &input)
 	assert.NotNil(s.T(), options)
@@ -247,7 +250,7 @@ func (s *ComponentSuite) TestTemplate() {
 
 func (s *ComponentSuite) TestImport() {
 	const component = "example/import"
-	const stack = "test"
+	const stack = "default-test"
 	const awsRegion = "us-east-2"
 
 	// s.DeployAtmosComponent(s.T(), component, stack, nil)
@@ -260,9 +263,10 @@ func (s *ComponentSuite) TestImport() {
 	s.DriftTest(component, stack, &input)
 }
 
+
 func (s *ComponentSuite) TestEnabledFlag() {
 	const component = "example/disabled"
-	const stack = "test"
+	const stack = "default-test"
 	s.VerifyEnabledFlag(component, stack, nil)
 }
 

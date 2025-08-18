@@ -1,0 +1,10 @@
+import:
+  - ../_defaults
+
+vars:
+  # Set shorthand for the GitHub organization name. We'll use this as the stack name
+  namespace: cloudposse
+
+terraform:
+  vars:
+    owner: cloudposse-examples

@@ -1,0 +1,23 @@
+components:
+  terraform:
+    example/template:
+      metadata:
+        component: target
+      vars:
+        enabled: true
+        owner: cloudposse-tests
+
+        template:
+          owner: cloudposse-tests
+          name: test-terraform-github-repository-template
+          include_all_branches: true
+
+        repository:
+          name: "component-test"
+          description: "Terraform acceptance tests for component"
+          homepage_url: "http://example.com/"
+          topics:
+            - terraform
+            - github
+            - test
+          default_branch: "main"
