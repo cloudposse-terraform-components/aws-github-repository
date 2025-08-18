@@ -1,7 +1,0 @@
-# These are used for testing the basic functionality of the GitHub component
-import:
-  - ./_defaults
-  - catalog/basic/basic
-  - catalog/basic/disabled
-  - catalog/basic/template
-  - catalog/basic/import
