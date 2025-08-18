@@ -46,7 +46,7 @@ stacks:
     - "**/_defaults.yaml"
 
   # Can also be set using `ATMOS_STACKS_NAME_PATTERN` ENV var
-  name_pattern: "{tenant}-{stage}"
+  name_pattern: "{namespace}"
 
 workflows:
   # Can also be set using `ATMOS_WORKFLOWS_BASE_PATH` ENV var, or `--workflows-dir` command-line arguments

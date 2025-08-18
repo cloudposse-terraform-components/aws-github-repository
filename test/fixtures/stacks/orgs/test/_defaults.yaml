@@ -1,0 +1,9 @@
+import:
+  - ../_defaults
+
+vars:
+  namespace: test
+
+terraform:
+  vars:
+    owner: cloudposse-tests

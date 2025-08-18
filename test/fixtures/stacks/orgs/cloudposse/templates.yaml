@@ -1,0 +1,15 @@
+import:
+  - ./_defaults
+  - catalog/github/defaults
+
+components:
+  terraform:
+    template-app-on-eks:
+      metadata:
+        component: github-repository
+        inherits:
+          - github/defaults
+      vars:
+        repository:
+          name: template-app-on-eks
+          is_template: true

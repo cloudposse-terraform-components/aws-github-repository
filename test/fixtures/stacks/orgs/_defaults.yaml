@@ -1,0 +1,19 @@
+terraform:
+  # Default AWS region for all stacks.
+  # This is used to access secrets from AWS SSM. GitHub does not need a region.
+  vars:
+    region: us-east-2
+
+  # Configure the AWS provider to assume the specific account used to manage GitHub, core-auto
+  providers:
+    aws:
+      region: us-east-2
+      assume_role:
+        role_arn: 'arn:aws:iam::{{ getenv "TEST_ACCOUNT_ID" | default "<TEST_ACCOUNT_ID>" }}:role/tester-terraform'
+
+  # Unique backend used for testing
+  backend_type: local
+  backend:
+    local:
+      path: '{{ getenv "COMPONENT_HELPER_STATE_DIR" | default "../../../state" }}/{{ .component }}/terraform.tfstate'
+      workspace_dir: '{{ getenv "COMPONENT_HELPER_STATE_DIR" | default "../../../state" }}/{{ .component }}/'

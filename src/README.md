@@ -85,7 +85,6 @@ The following configs are not supported for import:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_iam_roles"></a> [iam\_roles](#module\_iam\_roles) | ../account-map/modules/iam-roles | n/a |
 | <a name="module_repository"></a> [repository](#module\_repository) | cloudposse/repository/github | 0.2.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 
