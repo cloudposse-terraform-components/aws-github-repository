@@ -1,0 +1,18 @@
+import:
+  - catalog/github/app/*
+  - catalog/github/environment/*
+  - catalog/github/ruleset/*
+  - catalog/github/repo/*
+
+components:
+  terraform:
+    github/defaults:
+      metadata:
+        type: abstract
+        inherits:
+          # Defaults for the repository
+          - github/repo/defaults
+          # Default rulesets
+          - github/ruleset/branch-protection
+          # Environment and app requirements
+          - github/environment/defaults
