@@ -1,6 +1,3 @@
-import:
-  - ../_defaults
-
 vars:
   # Set shorthand for the GitHub organization name. We'll use this as the stack name
   namespace: cloudposse
@@ -8,3 +5,28 @@ vars:
 terraform:
   vars:
     owner: cloudposse-examples
+    # Default AWS region for all stacks.
+    # This is used to access secrets from AWS SSM. GitHub does not need a region.
+    region: us-east-2
+
+  # Configure the AWS provider to assume the specific account used to manage GitHub, core-auto
+  # ** This is a non-functional example **
+  providers:
+    aws:
+      region: us-east-2
+      assume_role:
+        role_arn: "arn:aws:iam::123456789012:role/acme-core-gbl-auto-terraform"
+
+  # Configure the backend to use S3 for Terraform state management
+  # ** This is a non-functional example **
+  backend_type: s3
+  backend:
+    s3:
+      bucket: acme-core-use2-root-tfstate-core
+      dynamodb_table: acme-core-use2-root-tfstate-core-lock
+      assume_role:
+        role_arn: arn:aws:iam::123456789012:role/acme-core-gbl-root-tfstate-core
+      encrypt: true
+      key: terraform.tfstate
+      acl: bucket-owner-full-control
+      region: us-east-2
