@@ -4,4 +4,16 @@ metadata:
   name: fixtures
   description: Atmos vendoring manifest
 spec:
-  sources: []
+  sources:
+    # https://github.com/cloudposse-terraform-components/aws-account-map
+    - component: "account-map"
+      source: github.com/cloudposse-terraform-components/aws-account-map.git//src?ref={{.Version}}
+      version: v1.535.4
+      targets:
+        - "components/terraform/account-map"
+      included_paths:
+        - "**/*.tf"
+        - "**/*.md"
+        - "**/*.tftmpl"
+        - "**/modules/**"
+      excluded_paths: []
