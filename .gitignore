@@ -74,3 +74,4 @@ error.txt
 
 *.zip
 account-map/
+.atmos/cache.yaml
