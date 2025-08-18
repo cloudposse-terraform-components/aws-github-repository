@@ -5,54 +5,237 @@ github_repo: "cloudposse-terraform-components/aws-github-repository"
 
 # Short description of this project
 description: |-
-  Provision a GitHub repository and set repository secrets and variables from AWS Secrets Manager and AWS Systems Manager Parameter Store.
+  :lock: Managing GitHub repos in a compliant way just got way easier.
+
+  One of the most common requirements for companies operating in regulated spaces is having consistent, enforceable repository configurations. Some teams have hacked together homegrown solutions, while others know it's something they need to do but never quite got to.
+
+  Our `aws-github-repository` component changes that by providing comprehensive GitHub repository management entirely through infrastructure as code.
+
+  **Manage repos and all settings declaratively:**
+  - Repository configuration (visibility, topics, features, merge settings)
+  - Environments with deployment protection and reviewers
+  - Variables and secrets pulling from AWS Secrets Manager and Parameter Store
+  - Branch protection rules and rule sets
+  - Webhooks, deploy keys, labels, and custom properties
+  - Team and user permissions
+
+  **Import existing repos and bring them under management:**
+  - Import existing repositories and their configurations
+  - Bring legacy repos under consistent management
+  - Maintain existing settings while adding compliance controls
+
+  **Define repository archetypes once:**
+  - Create abstract components for common configurations
+  - Use Atmos inheritance to automatically apply baseline compliance
+  - Every new repo inherits your security and compliance standards
+  - DRY up infrastructure with reusable templates
+
+  All powered by Atmos + a GitHub App for secure, auditable rollout across your organization.
 
 usage: |-
   **Stack Level**: Regional
 
-  Here's an example snippet for how to use this component.
+  This component provides comprehensive GitHub repository management with support for advanced features like environments, webhooks, deploy keys, custom properties, and more.
+
+  ## Basic Usage
+
+  Here's a simple example for creating a basic repository:
+
   ```yaml
   components:
     terraform:
-      example/aws-github-repository:
+      my-basic-repo:
         vars:
           enabled: true
-          owner: acme-github-org
+          owner: "my-organization"
           repository:
-            name: "my-repository"
-            description: "My repository"
-            homepage_url: "http://example.com/"
+            name: "my-basic-repo"
+            description: "A basic repository with standard settings"
+            homepage_url: "https://github.com/my-organization/my-basic-repo"
+            visibility: "private"
+            default_branch: "main"
             topics:
               - terraform
               - github
-              - test
-          default_branch: "main"
-          secrets:
-            MY_SECRET: "my-secret-value"
-            MY_SECRET_2: "nacl:dGVzdC12YWx1ZS0yCg=="
-            MY_SECRET_3: "ssm:///my/secret/path"
-            MY_SECRET_4: "asm://secret-name"
+              - infrastructure
+          teams:
+            devops: admin
+            developers: push
           variables:
-            MY_VARIABLE: "my-variable-value"
-            MY_VARIABLE_2: "ssm:///my/variable/path"
-            MY_VARIABLE_3: "asm://variable-name"
+            ENVIRONMENT: "production"
+            REGION: "us-east-1"
+          secrets:
+            AWS_ACCESS_KEY_ID: "nacl:dGVzdC1hY2Nlc3Mta2V5LWlkCg=="
+            DATABASE_URL: "ssm:///my-basic-repo/database-url"
   ```
 
-  ## Secrets and variables
+  ## Advanced Usage with Atmos Inheritance and Imports
 
-  The component supports setting repository and environment secrets and variables. 
+  The component supports Atmos inheritance and imports to create DRY (Don't Repeat Yourself) configurations. This allows you to define common settings once and reuse them across multiple repositories.
+
+  > [!TIP]
+  > For complete working examples of inheritance and imports, see the [`/examples`](./examples) folder in this repository.
+
+  ### Creating Abstract Components
+
+  First, create abstract components that define common configurations:
+
+  ```yaml
+  # catalog/github/repo/defaults.yaml
+  components:
+    terraform:
+      github/repo/defaults:
+        metadata:
+          component: github-repository
+          type: abstract
+        vars:
+          enabled: true
+
+          # Common team permissions
+          teams:
+            devops: admin
+
+          # Default repository settings
+          repository:
+            homepage_url: "https://github.com/{{ .vars.owner }}/{{ .vars.repository.name }}"
+            topics:
+              - terraform
+              - github
+            default_branch: "main"
+            visibility: "private"
+
+            # Common features
+            auto_init: true
+            gitignore_template: "TeX"
+            license_template: "GPL-3.0"
+
+            # Merge settings
+            allow_merge_commit: true
+            allow_squash_merge: true
+            allow_rebase_merge: true
+            allow_auto_merge: true
+
+            # Branch protection
+            delete_branch_on_merge: true
+            web_commit_signoff_required: true
+  ```
+
+  ### Creating a Master Defaults Component
+
+  Combine abstract components into a master defaults component:
+
+  ```yaml
+  # catalog/github/defaults.yaml
+  import:
+    - catalog/github/repo/*
+    - catalog/github/environment/*
+    - catalog/github/ruleset/*
+
+  components:
+    terraform:
+      github/defaults:
+        metadata:
+          type: abstract
+          inherits:
+            - github/repo/defaults
+            - github/ruleset/branch-protection
+            - github/environment/defaults
+  ```
+
+  ### Using Inheritance in Your Stacks
+
+  Now you can create repositories that inherit from these defaults:
+
+  ```yaml
+  # orgs/mycompany/myteam.yaml
+  import:
+    - ./_defaults
+    - catalog/github/defaults
+
+  components:
+    terraform:
+      # Simple repository inheriting all defaults
+      my-simple-app:
+        metadata:
+          component: github-repository
+          inherits:
+            - github/defaults
+        vars:
+          repository:
+            name: my-simple-app
+            description: "My simple application"
+            topics:
+              - application
+              - nodejs
+
+      # Repository with custom overrides
+      my-custom-app:
+        metadata:
+          component: github-repository
+          inherits:
+            - github/defaults
+        vars:
+          repository:
+            name: my-custom-app
+            description: "My custom application"
+            topics:
+              - application
+              - python
+              - api
+          # Override default team permissions
+          teams:
+            devops: admin
+            backend: push
+            frontend: push
+          # Add custom variables and secrets
+          variables:
+            LANGUAGE: "python"
+            FRAMEWORK: "fastapi"
+          secrets:
+            PYTHON_API_KEY: "asm://my-custom-app-api-key"
+  ```
+
+
+
+  ## Secrets and Variables Management
+
+  The component supports setting repository and environment secrets and variables.
   Secrets and variables can be set using the following methods:
   - Raw values (unencrypted string) (example: `my-secret-value`)
   - AWS Secrets Manager (SM) (example: `asm://secret-name`)
   - AWS Systems Manager Parameter Store (SSM) (example: `ssm:///my/secret/path`)
 
-  In addition to that secrets supports base64 encoded values [encrypted](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28) 
+  In addition to that secrets supports base64 encoded values [encrypted](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28)
   with [repository key](https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#get-a-repository-public-key).
   The value should be prefixed with `nacl:` (example: `nacl:dGVzdC12YWx1ZS0yCg==`).
 
-  ## Import mode
+  ### Environment-Specific Secrets and Variables
 
-  The component supports importing existing repository and it's configs:
+  ```yaml
+  environments:
+    production:
+      variables:
+        ENVIRONMENT: "production"
+        CLUSTER_NAME: "prod-cluster"
+        LOG_LEVEL: "warn"
+      secrets:
+        PROD_DATABASE_URL: "ssm:///my-repo/prod/database-url"
+        PROD_API_KEY: "asm://my-repo-prod-api-key"
+        PROD_JWT_SECRET: "nacl:cHJvZC1qd3Qtc2VjcmV0Cg=="
+
+    staging:
+      variables:
+        ENVIRONMENT: "staging"
+        CLUSTER_NAME: "staging-cluster"
+        LOG_LEVEL: "info"
+      secrets:
+        STAGING_DATABASE_URL: "ssm:///my-repo/staging/database-url"
+        STAGING_API_KEY: "asm://my-repo-staging-api-key"
+  ```
+
+  ## Import Mode
+
+  The component supports importing existing repository and its configurations:
   - collaborators
   - variables
   - environments
@@ -64,7 +247,19 @@ usage: |-
 
   Import mode is enabled by setting `import` input variable to `true`.
 
-  The following configs are not supported for import:
+  ```yaml
+  components:
+    terraform:
+      my-imported-repo:
+        vars:
+          enabled: true
+          import: true
+          owner: "my-organization"
+          repository:
+            name: "existing-repo-to-import"
+  ```
+
+  The following configurations are not supported for import:
   - secrets
   - environment secrets
   - branch protection policies
@@ -115,7 +310,3 @@ related:
   url: "https://atmos.tools"
 
 contributors: [] # If included generates contribs
-
-
-
-
