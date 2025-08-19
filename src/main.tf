@@ -88,9 +88,11 @@ locals {
 
   environments = {
     for k, v in coalesce(var.environments, {}) : k => {
-      wait_timer          = v.wait_timer
-      can_admins_bypass   = v.can_admins_bypass
-      prevent_self_review = v.prevent_self_review
+      wait_timer               = v.wait_timer
+      can_admins_bypass        = v.can_admins_bypass
+      prevent_self_review      = v.prevent_self_review
+      reviewers                = v.reviewers
+      deployment_branch_policy = v.deployment_branch_policy
       variables = {
         for name, variable in coalesce(v.variables, {}) : name => (
           startswith(variable, "ssm://") ? nonsensitive(data.aws_ssm_parameter.default[variable].value) :
