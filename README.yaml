@@ -71,8 +71,6 @@ usage: |-
   - rulesets
 
   <!-- prettier-ignore-start -->
-  <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
   <!-- prettier-ignore-end -->
 
 tags:
@@ -105,6 +103,12 @@ references:
   - name: "Reference Architectures"
     description: "Launch effortlessly with our turnkey reference architectures, built either by your team or ours."
     url: "https://cloudposse.com/"
+  - name: "Encrypting secrets for the REST API"
+    description: "How to encrypt GitHub Actions secrets using the repository public key."
+    url: "https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28"
+  - name: "Get a repository public key"
+    description: "GitHub REST API endpoint for retrieving a repository's public key for secrets encryption."
+    url: "https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#get-a-repository-public-key"
 
 related:
 - name: "Cloud Posse Terraform Modules"
@@ -115,7 +119,6 @@ related:
   url: "https://atmos.tools"
 
 contributors: [] # If included generates contribs
-
 
 
 
