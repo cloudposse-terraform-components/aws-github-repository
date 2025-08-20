@@ -36,9 +36,6 @@ components:
             wait_timer: 1
             can_admins_bypass: true
             prevent_self_review: false
-            deployment_branch_policy:
-              protected_branches: true
-              custom_branches: null
             variables:
               test_variable: "test"
             # Secrets do not support import
