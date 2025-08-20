@@ -39,7 +39,7 @@ func (s *ComponentSuite) TestBasic() {
 	createdSecretValue := strings.ToLower(random.UniqueId())
 	smSecretPath := aws.CreateSecretStringWithDefaultKey(s.T(), awsRegion, "Parameter for github-repository component testing", createdSecretName, createdSecretValue)
 	defer aws.DeleteSecret(s.T(), awsRegion, createdSecretName, true)
-	
+
 
 	input := map[string]interface{}{
 		"repository": map[string]interface{}{
@@ -141,23 +141,23 @@ func (s *ComponentSuite) TestBasic() {
 	assert.NotNil(s.T(), options)
 
 	s.DriftTest(component, stack, &input)
-	
+
 	repositoryNameOutputs := atmos.Output(s.T(), options, "full_name")
 	assert.Equal(s.T(), fmt.Sprintf("%s/%s", owner, repoName), repositoryNameOutputs)
 
 	token := os.Getenv("GITHUB_TOKEN")
 
 	client := github.NewClient(nil).WithAuthToken(token)
-  
+
 	repo, _, err := client.Repositories.Get(context.Background(), owner, repoName)
 	assert.NoError(s.T(), err)
-  
+
 	assert.Equal(s.T(), repoName, repo.GetName())
 	assert.Equal(s.T(), "Terraform acceptance tests for component", repo.GetDescription())
 	assert.Equal(s.T(), "http://example.com/", repo.GetHomepage())
 	assert.Equal(s.T(), false, repo.GetPrivate())
 	assert.Equal(s.T(), "public", repo.GetVisibility())
-  
+
 	// Additional assertions for repository attributes
 	assert.Equal(s.T(), false, repo.GetArchived())
 	assert.Equal(s.T(), true, repo.GetHasIssues())
@@ -188,12 +188,12 @@ func (s *ComponentSuite) TestBasic() {
 
 	assert.Equal(s.T(), createdSecretValue, vars.Variables[1].Value)
 	assert.Equal(s.T(), "TEST_VARIABLE_2", vars.Variables[1].Name)
-	
+
 	envVars, _, err := client.Actions.ListEnvVariables(context.Background(), owner, repoName, "staging", nil)
 	assert.NoError(s.T(), err)
 	assert.NotNil(s.T(), envVars)
 	assert.Equal(s.T(), 2, len(envVars.Variables))
-  
+
 	assert.Equal(s.T(), "TEST_VARIABLE", envVars.Variables[0].Name)
 	assert.Equal(s.T(), createdParameterValue, envVars.Variables[0].Value)
 
@@ -216,7 +216,7 @@ func (s *ComponentSuite) TestTemplate() {
 		},
 	}
 
-		
+
 	options, _ := s.DeployAtmosComponent(s.T(), component, stack, &input)
 	assert.NotNil(s.T(), options)
 
@@ -234,15 +234,15 @@ func (s *ComponentSuite) TestTemplate() {
 	token := os.Getenv("GITHUB_TOKEN")
 
 	client := github.NewClient(nil).WithAuthToken(token)
-  
+
 	repo, _, err := client.Repositories.Get(context.Background(), owner, repoName)
 	assert.NoError(s.T(), err)
-  
+
 	assert.Equal(s.T(), repoName, repo.GetName())
 
 	readmeContent, _, err := client.Repositories.GetReadme(context.Background(), owner, repoName, nil)
 	assert.NoError(s.T(), err)
-  
+
 	readmeData, err := readmeContent.GetContent()
 	assert.NoError(s.T(), err)
 	assert.Contains(s.T(), readmeData, "test-terraform-github-repository-template")
@@ -259,7 +259,7 @@ func (s *ComponentSuite) TestImport() {
 			"cloudposse-test-bot": "pull",
 		},
 	}
-	
+
 	s.DriftTest(component, stack, &input)
 }
 

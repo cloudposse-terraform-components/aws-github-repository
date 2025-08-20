@@ -65,7 +65,6 @@ docs/targets.md
 # Github actions temporary files
 docker.env
 error.txt
-github/
 
 # custom direnv and .env
 .env*
@@ -75,3 +74,4 @@ github/
 
 *.zip
 account-map/
+.atmos/cache.yaml

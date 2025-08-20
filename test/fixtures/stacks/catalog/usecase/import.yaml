@@ -23,7 +23,7 @@ components:
           jira:
             key_prefix: "JIRA-"
             target_url_template: "https://jira.example.com/browse/<num>"
-        
+
         variables:
           test_variable_2: "test-value-2"
 
@@ -67,4 +67,3 @@ components:
           bug:
             color: "#d73a4a"
             description: "Something isn't working"
-

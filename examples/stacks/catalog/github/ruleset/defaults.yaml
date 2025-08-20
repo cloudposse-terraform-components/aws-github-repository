@@ -1,0 +1,8 @@
+components:
+  terraform:
+    github/ruleset/defaults:
+      metadata:
+        component: github-repository
+        type: abstract
+      vars:
+        rulesets: {}
