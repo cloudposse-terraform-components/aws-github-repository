@@ -9,14 +9,3 @@
 # Import shared configuration used by all modules
 import:
   - https://raw.githubusercontent.com/cloudposse-terraform-components/.github/refs/heads/main/.github/atmos/terraform-component.yaml
-
-# Local overrides to support offline docs generation when remote import is unavailable
-docs:
-  generate:
-    readme:
-      input:
-        - README.yaml
-      template: ./docs/readme.gotmpl
-    readme-simple:
-      input:
-        - README.yaml
