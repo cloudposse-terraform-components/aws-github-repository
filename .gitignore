@@ -7,6 +7,8 @@ aws-assumed-role/
 *.iml
 .direnv
 .envrc
+.cache
+.atmos
 
 # Compiled and auto-generated files
 # Note that the leading "**/" appears necessary for Docker even if not for Git
@@ -65,6 +67,7 @@ docs/targets.md
 # Github actions temporary files
 docker.env
 error.txt
+github/
 
 # custom direnv and .env
 .env*
@@ -73,5 +76,3 @@ error.txt
 *.ovpn
 
 *.zip
-account-map/
-.atmos/cache.yaml

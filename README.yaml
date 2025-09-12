@@ -1,8 +1,6 @@
 name: "aws-github-repository"
-
 # Canonical GitHub repo
 github_repo: "cloudposse-terraform-components/aws-github-repository"
-
 # Short description of this project
 description: |-
   :lock: Managing GitHub repos in a compliant way just got way easier.
@@ -31,7 +29,6 @@ description: |-
   - DRY up infrastructure with reusable templates
 
   All powered by Atmos + a GitHub App for secure, auditable rollout across your organization.
-
 usage: |-
   **Stack Level**: Regional
 
@@ -266,24 +263,18 @@ usage: |-
   - rulesets
 
   <!-- prettier-ignore-start -->
-  <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
   <!-- prettier-ignore-end -->
-
 tags:
   - terraform
   - aws
   - github
   - terraform-components
-
 # Categories of this project
 categories:
   - terraform-modules/root
   - terraform-components
-
 # License of this project
 license: "APACHE2"
-
 # Badges to display
 badges:
   - name: "Latest Release"
@@ -292,7 +283,6 @@ badges:
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/for-the-badge.svg"
     url: "https://slack.cloudposse.com"
-
 references:
   - name: "Cloud Posse Documentation"
     description: "Complete documentation for the Cloud Posse solution"
@@ -300,13 +290,11 @@ references:
   - name: "Reference Architectures"
     description: "Launch effortlessly with our turnkey reference architectures, built either by your team or ours."
     url: "https://cloudposse.com/"
-
 related:
-- name: "Cloud Posse Terraform Modules"
-  description: Our collection of reusable Terraform modules used by our reference architectures.
-  url: "https://docs.cloudposse.com/modules/"
-- name: "Atmos"
-  description: "Atmos is like docker-compose but for your infrastructure"
-  url: "https://atmos.tools"
-
+  - name: "Cloud Posse Terraform Modules"
+    description: Our collection of reusable Terraform modules used by our reference architectures.
+    url: "https://docs.cloudposse.com/modules/"
+  - name: "Atmos"
+    description: "Atmos is like docker-compose but for your infrastructure"
+    url: "https://atmos.tools"
 contributors: [] # If included generates contribs
