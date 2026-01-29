@@ -4,7 +4,7 @@ locals {
 
 module "repository" {
   source  = "cloudposse/repository/github"
-  version = "0.2.1"
+  version = "1.0.0"
 
   enabled = local.enabled
 
