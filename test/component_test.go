@@ -1,18 +1,18 @@
 package test
 
 import (
-	"fmt"
-	"testing"
-	"strings"
 	"context"
+	"fmt"
 	"os"
+	"strings"
+	"testing"
 
-	helper "github.com/cloudposse/test-helpers/pkg/atmos/component-helper"
 	"github.com/cloudposse/test-helpers/pkg/atmos"
-	"github.com/stretchr/testify/assert"
-	"github.com/gruntwork-io/terratest/modules/random"
+	helper "github.com/cloudposse/test-helpers/pkg/atmos/component-helper"
 	"github.com/google/go-github/v73/github"
 	"github.com/gruntwork-io/terratest/modules/aws"
+	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/stretchr/testify/assert"
 )
 
 type ComponentSuite struct {
@@ -34,101 +34,98 @@ func (s *ComponentSuite) TestBasic() {
 	aws.PutParameter(s.T(), awsRegion, ssmSecretPath, "Parameter for github-repository component testing", createdParameterValue)
 	defer aws.DeleteParameter(s.T(), awsRegion, ssmSecretPath)
 
-
 	createdSecretName := strings.ToLower(random.UniqueId())
 	createdSecretValue := strings.ToLower(random.UniqueId())
 	smSecretPath := aws.CreateSecretStringWithDefaultKey(s.T(), awsRegion, "Parameter for github-repository component testing", createdSecretName, createdSecretValue)
 	defer aws.DeleteSecret(s.T(), awsRegion, createdSecretName, true)
 
-
-	input := map[string]interface{}{
-		"repository": map[string]interface{}{
-			"name": repoName,
-			"description": "Terraform acceptance tests for component",
-			"homepage_url": "http://example.com/",
-			"topics": []interface{}{"terraform", "github", "test"},
+	input := map[string]any{
+		"repository": map[string]any{
+			"name":           repoName,
+			"description":    "Terraform acceptance tests for component",
+			"homepage_url":   "http://example.com/",
+			"topics":         []any{"terraform", "github", "test"},
 			"default_branch": "main",
 
 			"is_template": true,
 
-			"auto_init": true,
+			"auto_init":          true,
 			"gitignore_template": "TeX",
-			"license_template": "GPL-3.0",
+			"license_template":   "GPL-3.0",
 
-			"archived": false,
+			"archived":           false,
 			"archive_on_destroy": false,
 
-			"has_issues": true,
+			"has_issues":      true,
 			"has_discussions": true,
-			"has_projects": true,
-			"has_wiki": true,
-			"has_downloads": true,
+			"has_projects":    true,
+			"has_wiki":        true,
 
 			"allow_merge_commit": true,
 			"allow_squash_merge": true,
 			"allow_rebase_merge": true,
-			"allow_auto_merge": true,
+			"allow_auto_merge":   true,
 
-			"merge_commit_title": "MERGE_MESSAGE",
-			"merge_commit_message": "PR_TITLE",
-			"squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+			"merge_commit_title":          "MERGE_MESSAGE",
+			"merge_commit_message":        "PR_TITLE",
+			"squash_merge_commit_title":   "COMMIT_OR_PR_TITLE",
 			"squash_merge_commit_message": "COMMIT_MESSAGES",
 
 			"web_commit_signoff_required": true,
-			"delete_branch_on_merge": true,
+			"delete_branch_on_merge":      true,
 
 			"ignore_vulnerability_alerts_during_read": true,
-			"allow_update_branch": true,
+			"allow_update_branch":                     true,
 
-			"security_and_analysis": map[string]interface{}{
-				"advanced_security": false,
-				"secret_scanning": true,
+			"security_and_analysis": map[string]any{
+				"advanced_security":               false,
+				"secret_scanning":                 true,
 				"secret_scanning_push_protection": true,
 			},
 		},
-		"variables": map[string]interface{}{
-			"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
+		"variables": map[string]any{
+			"test_variable":   fmt.Sprintf("ssm://%s", ssmSecretPath),
 			"test_variable_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
-		"secrets": map[string]interface{}{
-			"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
+		"secrets": map[string]any{
+			"test_secret":   fmt.Sprintf("ssm://%s", ssmSecretPath),
 			"test_secret_2": fmt.Sprintf("asm://%s", createdSecretName),
 		},
-		"environments": map[string]interface{}{
-			"development": map[string]interface{}{
-				"wait_timer": 5,
-				"can_admins_bypass": false,
+		"environments": map[string]any{
+			"development": map[string]any{
+				"wait_timer":          5,
+				"can_admins_bypass":   false,
 				"prevent_self_review": false,
-				"variables": map[string]interface{}{
+				"variables": map[string]any{
 					"test_variable": "test-value",
 				},
 			},
-			"production": map[string]interface{}{
-				"wait_timer": 10,
-				"can_admins_bypass": false,
+			"production": map[string]any{
+				"wait_timer":          10,
+				"can_admins_bypass":   false,
 				"prevent_self_review": false,
-				"deployment_branch_policy": map[string]interface{}{
+				"deployment_branch_policy": map[string]any{
 					"protected_branches": false,
-					"custom_branches": map[string]interface{}{
-						"branches": []interface{}{"main"},
-						"tags": []interface{}{"v1.0.0"},
+					"custom_branches": map[string]any{
+						"branches": []any{"main"},
+						"tags":     []any{"v1.0.0"},
 					},
 				},
-				"secrets": map[string]interface{}{
-					"test_secret": "test-value",
+				"secrets": map[string]any{
+					"test_secret":   "test-value",
 					"test_secret_2": "nacl:dGVzdC12YWx1ZS0yCg==",
 				},
 			},
-			"staging": map[string]interface{}{
-				"wait_timer": 0,
-				"can_admins_bypass": false,
+			"staging": map[string]any{
+				"wait_timer":          0,
+				"can_admins_bypass":   false,
 				"prevent_self_review": false,
-				"variables": map[string]interface{}{
-					"test_variable": fmt.Sprintf("ssm://%s", ssmSecretPath),
+				"variables": map[string]any{
+					"test_variable":   fmt.Sprintf("ssm://%s", ssmSecretPath),
 					"test_variable_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
-				"secrets": map[string]interface{}{
-					"test_secret": fmt.Sprintf("ssm://%s", ssmSecretPath),
+				"secrets": map[string]any{
+					"test_secret":   fmt.Sprintf("ssm://%s", ssmSecretPath),
 					"test_secret_2": fmt.Sprintf("asm://%s", smSecretPath),
 				},
 			},
@@ -164,7 +161,7 @@ func (s *ComponentSuite) TestBasic() {
 	assert.Equal(s.T(), true, repo.GetHasProjects())
 	assert.Equal(s.T(), true, repo.GetHasDiscussions())
 	assert.Equal(s.T(), true, repo.GetHasWiki())
-	assert.Equal(s.T(), true, repo.GetHasDownloads())
+	assert.Equal(s.T(), false, repo.GetHasDownloads())
 	assert.Equal(s.T(), true, repo.GetIsTemplate())
 	assert.Equal(s.T(), true, repo.GetAllowSquashMerge())
 	assert.Equal(s.T(), "COMMIT_OR_PR_TITLE", repo.GetSquashMergeCommitTitle())
@@ -210,12 +207,11 @@ func (s *ComponentSuite) TestTemplate() {
 	repoName := fmt.Sprintf("component-test-%s", randomRepositoryName)
 	owner := "cloudposse-tests"
 
-	input := map[string]interface{}{
-		"repository": map[string]interface{}{
+	input := map[string]any{
+		"repository": map[string]any{
 			"name": repoName,
 		},
 	}
-
 
 	options, _ := s.DeployAtmosComponent(s.T(), component, stack, &input)
 	assert.NotNil(s.T(), options)
@@ -254,15 +250,14 @@ func (s *ComponentSuite) TestImport() {
 	const awsRegion = "us-east-2"
 
 	// s.DeployAtmosComponent(s.T(), component, stack, nil)
-	input := map[string]interface{}{
-		"users": map[string]interface{}{
+	input := map[string]any{
+		"users": map[string]any{
 			"cloudposse-test-bot": "pull",
 		},
 	}
 
 	s.DriftTest(component, stack, &input)
 }
-
 
 func (s *ComponentSuite) TestEnabledFlag() {
 	const component = "example/disabled"
