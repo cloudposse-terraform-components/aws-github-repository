@@ -21,7 +21,6 @@ variable "repository" {
     has_projects                            = optional(bool, false)
     has_discussions                         = optional(bool, false)
     has_wiki                                = optional(bool, false)
-    has_downloads                           = optional(bool, false)
     is_template                             = optional(bool, false)
     allow_auto_merge                        = optional(bool, false)
     allow_squash_merge                      = optional(bool, true)

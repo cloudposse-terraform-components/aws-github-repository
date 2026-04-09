@@ -30,7 +30,6 @@ components:
           has_discussions: true
           has_projects: true
           has_wiki: true
-          has_downloads: true
 
           allow_merge_commit: true
           allow_squash_merge: true
