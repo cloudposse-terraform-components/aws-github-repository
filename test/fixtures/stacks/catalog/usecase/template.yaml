@@ -20,4 +20,3 @@ components:
             - terraform
             - github
             - test
-          default_branch: "main"

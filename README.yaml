@@ -50,7 +50,6 @@ usage: |-
             description: "A basic repository with standard settings"
             homepage_url: "https://github.com/my-organization/my-basic-repo"
             visibility: "private"
-            default_branch: "main"
             topics:
               - terraform
               - github
@@ -98,7 +97,6 @@ usage: |-
             topics:
               - terraform
               - github
-            default_branch: "main"
             visibility: "private"
 
             # Common features

@@ -15,8 +15,6 @@ components:
             - terraform
             - github
             - test
-          default_branch: "main"
-
           is_template: true
 
         autolink_references:

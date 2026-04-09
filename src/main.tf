@@ -49,9 +49,6 @@ module "repository" {
 
   web_commit_signoff_required = var.repository.web_commit_signoff_required
 
-  ignore_vulnerability_alerts_during_read = var.repository.ignore_vulnerability_alerts_during_read
-
-  default_branch              = var.repository.default_branch
   enable_vulnerability_alerts = var.repository.enable_vulnerability_alerts
   security_and_analysis       = var.repository.security_and_analysis
 

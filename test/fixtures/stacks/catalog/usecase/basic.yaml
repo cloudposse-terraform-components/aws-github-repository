@@ -15,8 +15,6 @@ components:
             - terraform
             - github
             - test
-          default_branch: "main"
-
           is_template: true
 
           auto_init: true
@@ -44,7 +42,6 @@ components:
           web_commit_signoff_required: true
           delete_branch_on_merge: true
 
-          ignore_vulnerability_alerts_during_read: true
           allow_update_branch: true
 
           security_and_analysis:

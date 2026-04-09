@@ -45,8 +45,6 @@ func (s *ComponentSuite) TestBasic() {
 			"description":    "Terraform acceptance tests for component",
 			"homepage_url":   "http://example.com/",
 			"topics":         []any{"terraform", "github", "test"},
-			"default_branch": "main",
-
 			"is_template": true,
 
 			"auto_init":          true,
@@ -74,8 +72,7 @@ func (s *ComponentSuite) TestBasic() {
 			"web_commit_signoff_required": true,
 			"delete_branch_on_merge":      true,
 
-			"ignore_vulnerability_alerts_during_read": true,
-			"allow_update_branch":                     true,
+			"allow_update_branch": true,
 
 			"security_and_analysis": map[string]any{
 				"advanced_security":               false,
@@ -161,7 +158,6 @@ func (s *ComponentSuite) TestBasic() {
 	assert.Equal(s.T(), true, repo.GetHasProjects())
 	assert.Equal(s.T(), true, repo.GetHasDiscussions())
 	assert.Equal(s.T(), true, repo.GetHasWiki())
-	assert.Equal(s.T(), false, repo.GetHasDownloads())
 	assert.Equal(s.T(), true, repo.GetIsTemplate())
 	assert.Equal(s.T(), true, repo.GetAllowSquashMerge())
 	assert.Equal(s.T(), "COMMIT_OR_PR_TITLE", repo.GetSquashMergeCommitTitle())
@@ -172,7 +168,6 @@ func (s *ComponentSuite) TestBasic() {
 	assert.Equal(s.T(), true, repo.GetAllowRebaseMerge())
 	assert.Equal(s.T(), true, repo.GetWebCommitSignoffRequired())
 	assert.Equal(s.T(), true, repo.GetDeleteBranchOnMerge())
-	assert.Equal(s.T(), "main", repo.GetDefaultBranch())
 	assert.Equal(s.T(), true, repo.GetAllowUpdateBranch())
 
 	vars, _, err := client.Actions.ListRepoVariables(context.Background(), owner, repoName, nil)

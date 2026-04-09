@@ -31,13 +31,11 @@ variable "repository" {
     merge_commit_message                    = optional(string, "PR_BODY")
     allow_rebase_merge                      = optional(bool, true)
     delete_branch_on_merge                  = optional(bool, false)
-    default_branch                          = optional(string, "main")
     web_commit_signoff_required             = optional(bool, false)
     topics                                  = optional(list(string), [])
     license_template                        = optional(string, null)
     gitignore_template                      = optional(string, null)
     auto_init                               = optional(bool, false)
-    ignore_vulnerability_alerts_during_read = optional(bool, false)
     enable_vulnerability_alerts             = optional(bool, true)
     allow_update_branch                     = optional(bool, false)
     security_and_analysis = optional(object({
