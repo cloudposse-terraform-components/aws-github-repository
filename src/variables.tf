@@ -303,6 +303,7 @@ variable "rulesets" {
       }), null),
       creation         = optional(bool, false),
       deletion         = optional(bool, false),
+      update           = optional(bool, false),
       non_fast_forward = optional(bool, false),
       required_pull_request_reviews = optional(object({
         dismiss_stale_reviews           = bool
