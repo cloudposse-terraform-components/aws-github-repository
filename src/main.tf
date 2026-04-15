@@ -10,6 +10,8 @@ module "repository" {
 
   name = var.repository.name
 
+  regex_replace_chars = "/[^.-a-zA-Z0-9]/"
+
   description = var.repository.description
   visibility  = var.repository.visibility
 
