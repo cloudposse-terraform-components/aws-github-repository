@@ -31,6 +31,7 @@ variable "repository" {
     merge_commit_message        = optional(string, "PR_BODY")
     allow_rebase_merge          = optional(bool, true)
     delete_branch_on_merge      = optional(bool, false)
+    default_branch              = optional(string, "main")
     web_commit_signoff_required = optional(bool, false)
     topics                      = optional(list(string), [])
     license_template            = optional(string, null)
@@ -300,6 +301,7 @@ variable "rulesets" {
       }), null),
       creation         = optional(bool, false),
       deletion         = optional(bool, false),
+      update           = optional(bool, false),
       non_fast_forward = optional(bool, false),
       required_pull_request_reviews = optional(object({
         dismiss_stale_reviews           = bool
