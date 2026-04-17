@@ -21,7 +21,6 @@ variable "repository" {
     has_projects                            = optional(bool, false)
     has_discussions                         = optional(bool, false)
     has_wiki                                = optional(bool, false)
-    has_downloads                           = optional(bool, false)
     is_template                             = optional(bool, false)
     allow_auto_merge                        = optional(bool, false)
     allow_squash_merge                      = optional(bool, true)
@@ -38,7 +37,6 @@ variable "repository" {
     license_template                        = optional(string, null)
     gitignore_template                      = optional(string, null)
     auto_init                               = optional(bool, false)
-    ignore_vulnerability_alerts_during_read = optional(bool, false)
     enable_vulnerability_alerts             = optional(bool, true)
     allow_update_branch                     = optional(bool, false)
     security_and_analysis = optional(object({
