@@ -24,7 +24,6 @@ module "repository" {
   is_template = var.repository.is_template
 
   has_discussions = var.repository.has_discussions
-  has_downloads   = var.repository.has_downloads
   has_issues      = var.repository.has_issues
   has_projects    = var.repository.has_projects
   has_wiki        = var.repository.has_wiki
@@ -49,8 +48,6 @@ module "repository" {
   license_template   = var.repository.license_template
 
   web_commit_signoff_required = var.repository.web_commit_signoff_required
-
-  ignore_vulnerability_alerts_during_read = var.repository.ignore_vulnerability_alerts_during_read
 
   default_branch              = var.repository.default_branch
   enable_vulnerability_alerts = var.repository.enable_vulnerability_alerts
