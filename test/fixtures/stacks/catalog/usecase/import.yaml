@@ -23,6 +23,7 @@ components:
           jira:
             key_prefix: "JIRA-"
             target_url_template: "https://jira.example.com/browse/<num>"
+            is_alphanumeric: true
 
         variables:
           test_variable_2: "test-value-2"
