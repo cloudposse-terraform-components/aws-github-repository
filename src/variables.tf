@@ -350,6 +350,10 @@ variable "rulesets" {
         strict_required_status_checks_policy = optional(bool, false)
         do_not_enforce_on_create             = optional(bool, false)
       }), null),
+      copilot_code_review = optional(object({
+        review_on_push             = optional(bool, false)
+        review_draft_pull_requests = optional(bool, false)
+      }), null),
       tag_name_pattern = optional(object({
         # starts_with, ends_with, contains, regex
         operator = string
