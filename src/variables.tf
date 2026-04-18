@@ -31,7 +31,6 @@ variable "repository" {
     merge_commit_message        = optional(string, "PR_BODY")
     allow_rebase_merge          = optional(bool, true)
     delete_branch_on_merge      = optional(bool, false)
-    default_branch              = optional(string, "main")
     web_commit_signoff_required = optional(bool, false)
     topics                      = optional(list(string), [])
     license_template            = optional(string, null)
@@ -349,6 +348,10 @@ variable "rulesets" {
         }))
         strict_required_status_checks_policy = optional(bool, false)
         do_not_enforce_on_create             = optional(bool, false)
+      }), null),
+      copilot_code_review = optional(object({
+        review_on_push             = optional(bool, false)
+        review_draft_pull_requests = optional(bool, false)
       }), null),
       tag_name_pattern = optional(object({
         # starts_with, ends_with, contains, regex
