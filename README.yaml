@@ -262,6 +262,29 @@ usage: |-
   - branch protection policies
   - rulesets
 
+  ## Copilot Code Review Rulesets
+
+  GitHub Copilot code review can be enabled through repository rulesets. For example, this enables Copilot reviews on pushes to the default branch:
+
+  ```yaml
+  components:
+    terraform:
+      github/defaults:
+        vars:
+          rulesets:
+            copilot_code_review:
+              name: "Copilot code review"
+              enforcement: "active"
+              target: "branch"
+              conditions:
+                ref_name:
+                  include:
+                    - "~DEFAULT_BRANCH"
+              rules:
+                copilot_code_review:
+                  review_on_push: true
+  ```
+
   <!-- prettier-ignore-start -->
   <!-- prettier-ignore-end -->
 tags:
