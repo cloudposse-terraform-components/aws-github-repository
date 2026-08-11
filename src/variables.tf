@@ -344,6 +344,11 @@ variable "rulesets" {
         require_last_push_approval        = optional(bool, false)
         required_approving_review_count   = optional(number, 0)
         required_review_thread_resolution = optional(bool, false)
+        required_reviewers = optional(list(object({
+          team              = string
+          file_patterns     = list(string)
+          minimum_approvals = number
+        })), [])
       }), null),
       required_deployments = optional(object({
         required_deployment_environments = optional(list(string), [])
@@ -405,6 +410,21 @@ variable "rulesets" {
   validation {
     condition     = alltrue([for k, v in var.rulesets : try(contains(["RepositoryRole", "Team", "Integration", "OrganizationAdmin"], v.bypass_actors.actor_type), true)])
     error_message = "Ruleset actor type must be RepositoryRole, Team, Integration or OrganizationAdmin"
+  }
+
+  validation {
+    condition = alltrue(flatten([
+      for k, v in var.rulesets : [
+        for required_reviewer in try(v.rules.pull_request.required_reviewers, []) :
+        required_reviewer.minimum_approvals >= 0 && required_reviewer.minimum_approvals <= 10
+      ]
+    ]))
+    error_message = "Ruleset pull request required reviewers minimum approvals must be between 0 and 10"
+  }
+
+  validation {
+    condition     = alltrue([for k, v in var.rulesets : try(length(v.rules.pull_request.required_reviewers) <= 15, true)])
+    error_message = "Ruleset pull request required reviewers can not have more than 15 teams"
   }
 
   validation {
